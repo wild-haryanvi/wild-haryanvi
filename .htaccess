@@ -1,0 +1,24 @@
+RewriteEngine On
+RewriteBase /wild%20haryanvi/
+
+# Remove .php extension
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.php [L]
+
+# Security headers
+<FilesMatch "\.php$">
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</FilesMatch>
+
+# Disable directory listing
+Options -Indexes
+
+# Protect sensitive files
+<FilesMatch "^(database|\.env|\.git)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
